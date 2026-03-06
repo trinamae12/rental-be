@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\AuthService;
 
+use Http\Resources\UserResource;
+
 class AuthController extends Controller
 {
     protected $authService;
@@ -38,5 +40,11 @@ class AuthController extends Controller
         $result = $this->authService->logout($user, $user->currentAccessToken());
 
         return response()->json($result);
+    }
+
+    public function me() {
+        $user = $this->authService->getAuthenticatedUser();
+        // return new UserResource($user);
+        return response()->json($user);
     }
 }

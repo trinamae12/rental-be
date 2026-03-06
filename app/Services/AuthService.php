@@ -3,8 +3,10 @@ namespace App\Services;
 
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
-class AuthService {
+class AuthService 
+{
     public function login(array $data) {
         $user = User::where('email', $data['email'])->first();
         
@@ -34,6 +36,15 @@ class AuthService {
         return [
             'success' => true,
             'message' => 'Logged out successfully',
+        ];
+    }
+
+    public function getAuthenticatedUser() {
+        $user = Auth::user();
+
+        return [
+            'success' => true,
+            'user' => $user
         ];
     }
 }
