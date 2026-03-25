@@ -202,4 +202,33 @@ class RoomTest extends TestCase
         $response->assertStatus(422);
         $response->assertJsonValidationErrors(['room_month_price']);
     }
+
+    public function test_set_room_inactive()
+    {
+        /**
+         * @var \App\Models\User $user
+         */
+
+        $user = User::factory()->create([
+            'email' => 'admin@test.com',
+            'password' => Hash::make('adminpassword2')
+        ]);
+
+        $this->actingAs($user, 'sanctum');
+
+        // Create room
+        $room = Room::factory()->create();
+
+        // Delete room
+        $room->delete();
+        $this->assertSoftDeleted($room);
+
+        // Check if deleted room is not found in find query
+        $foundRoom = Room::find($room->id);
+        $this->assertNull($foundRoom);
+
+        // Check if deleted room is found if query with trashed
+        $trashedRoom = Room::withTrashed()->find($room->id);
+        $this->assertNotNull($trashedRoom);
+    }
 }

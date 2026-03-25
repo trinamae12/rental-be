@@ -32,4 +32,10 @@ class RoomService
 
         return $updatedRoom;
     }
+
+    public function setRoomToInactive(Room $room) {
+        $deletedRoom = $room->delete();
+
+        return $deletedRoom;
+    }
 }

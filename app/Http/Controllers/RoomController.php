@@ -99,6 +99,11 @@ class RoomController extends Controller
      */
     public function destroy(Room $room)
     {
-        //
+        $this->roomService->setRoomToInactive($room);
+
+        return response()->json([
+            'success' => 'true',
+            'message' => 'Room deleted successfully'
+        ]);
     }
 }
