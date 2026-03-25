@@ -2,13 +2,14 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Laravel\Sanctum\HasApiTokens;
 
 class Room extends Model
 {
-    use HasApiTokens, SoftDeletes;
+    use HasApiTokens, SoftDeletes, HasFactory;
 
     protected $fillable = ['room_name', 'room_description', 'room_month_price'];
 }

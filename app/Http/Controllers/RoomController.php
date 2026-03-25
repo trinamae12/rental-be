@@ -81,7 +81,17 @@ class RoomController extends Controller
      */
     public function update(Request $request, Room $room)
     {
-        //
+        $request->validate([
+            'room_name' => 'required',
+            'room_month_price' => 'required | decimal:2'
+        ]);
+
+        $result = $this->roomService->updateRoom($room, $request->only('room_name', 'room_description', 'room_month_price'));
+
+        return response()->json([
+            'success' => 'true',
+            'message' => 'Room updated successfully'
+        ]);
     }
 
     /**

@@ -26,4 +26,10 @@ class RoomService
 
         return $newRoom;
     }
+
+    public function updateRoom(Room $room, array $roomUpdate) {
+        $updatedRoom = $room->update($roomUpdate);
+
+        return $updatedRoom;
+    }
 }

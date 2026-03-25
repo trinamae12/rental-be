@@ -2,6 +2,7 @@
 
 namespace Tests\Feature;
 
+use App\Models\Room;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
@@ -116,6 +117,86 @@ class RoomTest extends TestCase
             'room_name' => 'Room 3',
             'room_description' => '',
             'room_month_price' => '6000'
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['room_month_price']);
+    }
+
+    public function test_update_room()
+    {
+        /** 
+         * @var \App\Models\User $user 
+        */
+        $user = User::factory()->create([
+            'email' => 'admin@test.com',
+            'password' => Hash::make('adminpassword2')
+        ]);
+
+        $this->actingAs($user, 'sanctum');
+
+        // Create room first
+        $room = Room::factory()->create();
+
+        $response = $this->putJson("/api/room/{$room->id}", [
+            'room_name' => 'Room Number 3',
+            'room_description' => 'This room is next to room number 2',
+            'room_month_price' => '6500.00'
+        ]);
+
+        $response->assertStatus(200);
+
+        $this->assertDatabaseHas('rooms', [
+            'room_name' => 'Room Number 3',
+            'room_description' => 'This room is next to room number 2',
+            'room_month_price' => '6500.00'
+        ]);
+    }
+
+    public function test_update_room_no_room_number()
+    {
+        /** 
+         * @var \App\Models\User $user 
+        */
+        $user = User::factory()->create([
+            'email' => 'admin@test.com',
+            'password' => Hash::make('adminpassword2')
+        ]);
+
+        $this->actingAs($user, 'sanctum');
+
+        // Create room first
+        $room = Room::factory()->create();
+
+        $response = $this->putJson("/api/room/{$room->id}", [
+            'room_name' => '',
+            'room_description' => 'This room is next to room number 2',
+            'room_month_price' => '6500.00'
+        ]);
+
+        $response->assertStatus(422);
+        $response->assertJsonValidationErrors(['room_name']);
+    }
+
+    public function test_update_room_no_room_price()
+    {
+        /**
+         * @var \App\Models\User $user
+         */
+        $user = User::factory()->create([
+            'email' => 'admin@test.com',
+            'password' => Hash::make('adminpassword2')
+        ]);
+
+        $this->actingAs($user, 'sanctum');
+
+        // Create a room first
+        $room = Room::factory()->create();
+
+        $response = $this->putJson("/api/room/{$room->id}",[
+            'room_name' => 'Room Number 3',
+            'room_description' => 'This room is next to room number 2',
+            'room_month_price' => ''
         ]);
 
         $response->assertStatus(422);
